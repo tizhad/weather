@@ -6,7 +6,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <button type="button" class="btn btn-light" @click="$emit('showModal')">Add City</button>
+              <button type="button" class="btn btn-light" @click="$emit('showSearchCityForm')">Add City</button>
             </li>
           </ul>
         </div>
