@@ -1,11 +1,24 @@
 import axios from "axios";
 import { API_KEY } from "@/api/apiKey";
 
-const BASE_URL = "http://api.openweathermap.org/data/2.5/forecast";
+const BASE_URL = "https://api.openweathermap.org/data/2.5/forecast";
+const defaultCity = "Amsterdam";
 
 export const getWeatherData = async (city) => {
   try {
-    const response = await axios.get(`${BASE_URL}?q=${city}&appid=${API_KEY}`);
+    const response = await axios.get(
+      `${BASE_URL}?q=${city}&appid=${API_KEY}&units=metric`
+    );
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};
+export const getDefaultCityForecast = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}?q=${defaultCity}&appid=${API_KEY}&units=metric`
+    );
     return response.data;
   } catch (error) {
     return null;
