@@ -44,7 +44,6 @@ export default {
   },
   watch: {
     query(newVal, oldVal) {
-      console.log('Search input changed from', oldVal, 'to', newVal);
       if(newVal !== oldVal ) this.$emit("newQuery");
     }
   },
@@ -53,7 +52,6 @@ export default {
       this.loading = true;
       try {
         const result = await getWeatherData(this.query);
-        console.log(result)
         this.searchResults = result;
         if (this.searchResults === null) {
           this.$emit("errorMessage", "Please Enter the city name correctly!")
