@@ -1,20 +1,33 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <AppHeader @showModal="showAddCityModal"/>
+  <SearchCity v-if="showModal"></SearchCity>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import SearchCity from '@/components/SearchCity.vue';
+import AppHeader from '@/components/AppHeader.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    SearchCity,
+    AppHeader,
+  },
+  data() {
+    return {
+      showModal: false,
+    };
+  },
+  methods: {
+    showAddCityModal() {
+      this.showModal = true;
+    }
   }
 }
 </script>
 
 <style>
+@import "~@fortawesome/fontawesome-free/css/all.css";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
