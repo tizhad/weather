@@ -1,26 +1,41 @@
 <template>
-  <AppHeader @showModal="showAddCityModal"/>
-  <SearchCity v-if="showModal"></SearchCity>
+  <AppHeader @showSearchCityForm="showAddCityForm"></AppHeader>
+  <SearchCity v-if="showForm" @errorMessage="showAlert"  @newQuery = removeAlert></SearchCity>
+  <AlertMessage v-if="showErrorMsg" :message=errorMsg></AlertMessage>
 </template>
 
 <script>
+import AlertMessage from '@/components/AlertMessage.vue';
 import SearchCity from '@/components/SearchCity.vue';
 import AppHeader from '@/components/AppHeader.vue';
 
 export default {
   name: 'App',
   components: {
+    AlertMessage,
     SearchCity,
     AppHeader,
   },
   data() {
     return {
-      showModal: false,
+      showForm: false,
+      showErrorMsg: false,
+      errorMsg: "",
     };
   },
   methods: {
-    showAddCityModal() {
-      this.showModal = true;
+    showAddCityForm() {
+      this.showForm = true;
+      this.errorMsg = "";
+    },
+    showAlert(errorMsg) {
+      if (errorMsg !== this.errorMsg) {
+        this.showErrorMsg = true;
+        this.errorMsg = errorMsg;
+      }
+    },
+    removeAlert() {
+      this.showErrorMsg = false;
     }
   }
 }
