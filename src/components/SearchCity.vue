@@ -33,7 +33,7 @@ import { getWeatherData } from "@/api/weatherApi";
 
 export default {
   name: "SearchCity",
-  emits: ["errorMessage", "newQuery"],
+  emits: ["errorMessage", "newQuery", "newSearch"],
   data() {
     return {
       query: "",
@@ -53,6 +53,8 @@ export default {
       try {
         const result = await getWeatherData(this.query);
         this.searchResults = result;
+        this.$emit("newSearch", this.searchResults);
+        this.loading = false
         if (this.searchResults === null) {
           this.$emit("errorMessage", "Please Enter the city name correctly!")
           this.loading = false;
