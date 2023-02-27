@@ -12,7 +12,7 @@
             <div
                 class="row align-items-center align-self-center align-content-center"
             >
-              <div class="col-6 display-2">
+              <div class="col-6 display-3">
                 <img class="w-25" :src="this.forecastData.icon" alt="weather icon" /><strong>
                 {{ this.forecastData.temp }} &deg;C</strong
               >

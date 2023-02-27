@@ -12,7 +12,7 @@
             <div
                 class="row align-items-center align-self-center align-content-center"
             >
-              <div class="col-6 display-2">
+              <div class="col-6 display-3">
                 <img class="w-25" :src="this.forecast.icon" alt="weather icon" /><strong>
                 {{ this.forecast.temp }} &deg;C</strong
               >
@@ -20,7 +20,7 @@
               <div class="col-6">
                 <div class="row">
                   <span
-                  >H: {{ this.forecast.temp_max }}&deg; &nbsp;L:
+                  >Min: {{ this.forecast.temp_max }}&deg; &nbsp;Max:
                     {{ this.forecast.temp_min }}&deg;</span
                   >
                 </div>
