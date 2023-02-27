@@ -1,22 +1,25 @@
 <template>
   <AppHeader @showSearchCityForm="showAddCityForm"></AppHeader>
-  <SearchCity v-if="showForm" @errorMessage="showAlert"  @newQuery = removeAlert></SearchCity>
-  <CityForecast v-if="defaultCityForecast" :defaultCityData="defaultCityForecast"></CityForecast>
+  <SearchCity v-if="showForm" @errorMessage="showAlert"  @newQuery = removeAlert @new-search = "onSearch"></SearchCity>
+  <DefaultCity v-if="defaultCityForecast" :defaultCityData="defaultCityForecast"></DefaultCity>
+  <CityList v-if="searchResult" :newCityForecast="searchResult"></CityList>
   <AlertMessage v-if="showErrorMsg" :message=errorMsg></AlertMessage>
 
 </template>
 
 <script>
 import AlertMessage from '@/components/AlertMessage.vue';
-import CityForecast from '@/components/CityForecast.vue';
+import CityList from '@/components/CityList.vue';
+import DefaultCity from '@/components/DefaultCity.vue';
 import SearchCity from '@/components/SearchCity.vue';
 import AppHeader from '@/components/AppHeader.vue';
-import { getDefaultCityForecast } from "@/api/weatherApi";
+import {getWeatherData} from '@/api/weatherApi';
 
 export default {
   name: 'App',
   components: {
-    CityForecast,
+    CityList,
+    DefaultCity,
     AlertMessage,
     SearchCity,
     AppHeader,
@@ -27,6 +30,7 @@ export default {
       showErrorMsg: false,
       errorMsg: "",
       defaultCityForecast: null,
+      searchResult: null,
     };
   },
   created() {
@@ -46,9 +50,12 @@ export default {
     removeAlert() {
       this.showErrorMsg = false;
     },
+    onSearch(result) {
+      this.searchResult = result;
+    },
     async getDefaultCityDate() {
         try {
-          const result = await getDefaultCityForecast();
+          const result = await getWeatherData('Amsterdam');
           if (result && result.list.length > 0) {
             this.defaultCityForecast = result;
           }
