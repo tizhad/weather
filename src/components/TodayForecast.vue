@@ -1,12 +1,11 @@
 <template>
   <div class="m-4">
-    <h3 >{{ this.data.city }}</h3>
     <div class="row row-cols-md-1 g-1">
       <div class="col">
         <div class="card">
           <div class="card-body">
             <div class="row">
-              <div class="col-2">
+              <div class="col-4">
                 <span>TODAY</span>
               </div>
             </div>
