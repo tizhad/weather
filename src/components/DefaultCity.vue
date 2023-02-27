@@ -1,5 +1,6 @@
 <template>
-  <div class="row">
+  <div class="col-md-12 mt-4"> <h1>Amsterdam</h1></div>
+  <div class="row bg-light">
     <div class="col-md-6">
       <TodayForecast :forecastData="todayForecast"></TodayForecast>
     </div>
@@ -47,20 +48,23 @@ export default {
         description: defaultCityData.list[0].weather[0].description,
         icon: `http://openweathermap.org/img/wn/${defaultCityData.list[0].weather[0].icon}@2x.png`,
       };
+      console.log(this.todayForecast)
     },
     setTomorrowForecast(defaultCityData) {
-      const forecast = defaultCityData.list.find((f) => f.dt_txt.includes(this.tomorrow));
-      this.tomorrowForecast = {
-        city: defaultCityData.city.name,
-        temp: forecast.main.temp,
-        feels_like: forecast.main.feels_like,
-        temp_min: forecast.main.temp_min,
-        temp_max: forecast.main.temp_max,
-        humidity: forecast.main.humidity,
-        windSpeed: forecast.wind.speed,
-        description: forecast.weather[0].description,
-        icon: `http://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`,
-      };
+      defaultCityData.list.map((item) => {
+        if (item.dt_txt.includes(this.tomorrow)) {
+          this.tomorrowForecast = {
+            temp: item.main.temp,
+            feels_like: item.main.feels_like,
+            temp_min: item.main.temp_min,
+            temp_max: item.main.temp_max,
+            humidity: item.main.humidity,
+            windSpeed: item.wind.speed,
+            description: item.weather[0].description,
+            icon: `http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`,
+          };
+        }
+      })
     },
   },
 };
