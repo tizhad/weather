@@ -1,14 +1,13 @@
 <template>
   <AppHeader @showSearchCityForm="showAddCityForm"></AppHeader>
-  <SearchCity v-if="showForm" @errorMessage="showAlert"  @newQuery = removeAlert @new-search = "onSearch"></SearchCity>
+  <SearchCity v-if="showForm"  @newSearch = "onSearch"></SearchCity>
   <DefaultCity v-if="defaultCityForecast" :defaultCityData="defaultCityForecast"></DefaultCity>
   <CityList v-if="searchResult" :newCityForecast="searchResult"></CityList>
-  <AlertMessage v-if="showErrorMsg" :message=errorMsg></AlertMessage>
+  <div v-if="errorMsg" class="alert alert-danger w-50 align-items-center align-self-center m-auto" role="alert">{{message}}</div>
 
 </template>
 
 <script>
-import AlertMessage from '@/components/AlertMessage.vue';
 import CityList from '@/components/CityList.vue';
 import DefaultCity from '@/components/DefaultCity.vue';
 import SearchCity from '@/components/SearchCity.vue';
@@ -20,17 +19,15 @@ export default {
   components: {
     CityList,
     DefaultCity,
-    AlertMessage,
     SearchCity,
     AppHeader,
   },
   data() {
     return {
       showForm: false,
-      showErrorMsg: false,
-      errorMsg: "",
       defaultCityForecast: null,
       searchResult: null,
+      errorMsg: null,
     };
   },
   created() {
@@ -39,16 +36,6 @@ export default {
   methods: {
     showAddCityForm() {
       this.showForm = true;
-      this.errorMsg = "";
-    },
-    showAlert(errorMsg) {
-      if (errorMsg !== this.errorMsg) {
-        this.showErrorMsg = true;
-        this.errorMsg = errorMsg;
-      }
-    },
-    removeAlert() {
-      this.showErrorMsg = false;
     },
     onSearch(result) {
       this.searchResult = result;
