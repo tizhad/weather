@@ -1,24 +1,30 @@
 <template>
   <AppHeader @showSearchCityForm="showAddCityForm"></AppHeader>
-  <SearchCity v-if="showForm"  @newSearch = "onSearch"></SearchCity>
-  <DefaultCity v-if="defaultCityForecast" :defaultCityData="defaultCityForecast"></DefaultCity>
-  <CityList v-if="searchResult" :newCityForecast="searchResult"></CityList>
-  <div v-if="errorMsg" class="alert alert-danger w-50 align-items-center align-self-center m-auto" role="alert">{{message}}</div>
-
+  <SearchCity v-if="showForm" @newSearch="onSearch"></SearchCity>
+  <div
+      v-if="errorMsg"
+      class="alert alert-danger w-50 align-items-center align-self-center m-auto"
+      role="alert"
+  >
+    {{ errorMsg }}
+  </div>
+  <CityList
+    v-if="this.storedCitiesForecastData.length > 0"
+    :cityForecast="this.storedCitiesForecastData"
+  ></CityList>
 </template>
 
 <script>
-import CityList from '@/components/CityList.vue';
-import DefaultCity from '@/components/DefaultCity.vue';
-import SearchCity from '@/components/SearchCity.vue';
-import AppHeader from '@/components/AppHeader.vue';
-import {getWeatherData} from '@/api/weatherApi';
+import CityList from "@/components/CityList.vue";
+import SearchCity from "@/components/SearchCity.vue";
+import AppHeader from "@/components/AppHeader.vue";
+import { getWeatherData } from "@/api/weatherApi";
+import {toRaw} from 'vue';
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     CityList,
-    DefaultCity,
     SearchCity,
     AppHeader,
   },
@@ -26,39 +32,54 @@ export default {
     return {
       showForm: false,
       defaultCityForecast: null,
-      searchResult: null,
       errorMsg: null,
+      cityList: ["Amsterdam"],
+      storedCitiesForecastData: [],
     };
   },
   created() {
-  this.getDefaultCityDate();
+    const storedCityList = JSON.parse(localStorage.getItem("cityList"));
+    localStorage.setItem("cityList", JSON.stringify(storedCityList));
+    this.cityList = storedCityList;
+    this.cityList.forEach((city) => {
+      this.getCityForecast(city);
+    });
   },
   methods: {
     showAddCityForm() {
       this.showForm = true;
     },
-    onSearch(result) {
-      this.searchResult = result;
+    async onSearch(city) {
+      if (!this.cityList.includes(city)) {
+        this.cityList.push(city);
+      }
+      localStorage.setItem("cityList", JSON.stringify(this.cityList));
+      const weatherData = await this.getCityForecast(city);
+      this.storedCitiesForecastData.push(toRaw(weatherData));
+      if (weatherData) {
+        this.errorMsg = null;
+      }
     },
-    async getDefaultCityDate() {
-        try {
-          const result = await getWeatherData('Amsterdam');
-          if (result && result.list.length > 0) {
-            this.defaultCityForecast = result;
-          }
-          if (this.defaultCityForecast === null) {
-            this.errorMsg = "Something went wrong! Please refresh the page."
-          }
-        } catch (error) {
-          this.errorMsg = "Something went wrong! Please refresh the page."
+    async getCityForecast(city) {
+      try {
+        const result = await getWeatherData(city);
+        if (result && result.list.length > 0) {
+          this.storedCitiesForecastData.push(result);
         }
-      },
-  }
-}
+        if (result === null) {
+          this.errorMsg = "Something went wrong! Please refresh the page.";
+        }
+      } catch (error) {
+        this.errorMsg = "Something went wrong! Please refresh the page.";
+      }
+    },
+  },
+};
 </script>
 
 <style>
 @import "~@fortawesome/fontawesome-free/css/all.css";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
