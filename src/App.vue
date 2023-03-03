@@ -39,8 +39,11 @@ export default {
   },
   created() {
     const storedCityList = JSON.parse(localStorage.getItem("cityList"));
-    localStorage.setItem("cityList", JSON.stringify(storedCityList));
-    this.cityList = storedCityList;
+    if (storedCityList) {
+      this.cityList = storedCityList;
+    } else {
+      localStorage.setItem("cityList", JSON.stringify(this.cityList));
+    }
     this.cityList.forEach((city) => {
       this.getCityForecast(city);
     });
@@ -52,8 +55,8 @@ export default {
     async onSearch(city) {
       if (!this.cityList.includes(city)) {
         this.cityList.push(city);
+        localStorage.setItem("cityList", JSON.stringify(this.cityList));
       }
-      localStorage.setItem("cityList", JSON.stringify(this.cityList));
       const weatherData = await this.getCityForecast(city);
       this.storedCitiesForecastData.push(toRaw(weatherData));
       if (weatherData) {
