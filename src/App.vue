@@ -11,6 +11,7 @@
   <CityList
     v-if="this.storedCitiesForecastData.length > 0"
     :cityForecast="this.storedCitiesForecastData"
+    @removeCity="onRemoveCityFromList"
   ></CityList>
 </template>
 
@@ -38,19 +39,22 @@ export default {
     };
   },
   created() {
-    const storedCityList = JSON.parse(localStorage.getItem("cityList"));
-    if (storedCityList) {
-      this.cityList = storedCityList;
-    } else {
-      localStorage.setItem("cityList", JSON.stringify(this.cityList));
-    }
-    this.cityList.forEach((city) => {
-      this.getCityForecast(city);
-    });
+    this.getStoredCityListForecast();
   },
   methods: {
     showAddCityForm() {
       this.showForm = true;
+    },
+    getStoredCityListForecast() {
+      const storedCityList = JSON.parse(localStorage.getItem("cityList"));
+      if (storedCityList) {
+        this.cityList = storedCityList;
+      } else {
+        localStorage.setItem("cityList", JSON.stringify(this.cityList));
+      }
+      this.cityList.forEach((city) => {
+        this.getCityForecast(city);
+      });
     },
     async onSearch(city) {
       if (!this.cityList.includes(city)) {
@@ -76,6 +80,16 @@ export default {
         this.errorMsg = "Something went wrong! Please refresh the page.";
       }
     },
+    onRemoveCityFromList(city) {
+      const storedCityList = JSON.parse(localStorage.getItem('cityList'));
+      const index = storedCityList.indexOf(city);
+      if (index > -1) {
+        storedCityList.splice(index, 1);
+      }
+      this.cityList = storedCityList;
+      localStorage.setItem("cityList", JSON.stringify(this.cityList));
+      location.reload();
+    }
   },
 };
 </script>
