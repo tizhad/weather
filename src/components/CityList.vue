@@ -8,6 +8,7 @@
       <TodayForecast
         v-if="item"
         :forecastData="item"
+        @removeCity="removeCity"
       ></TodayForecast>
     </div>
   </div>
@@ -20,6 +21,7 @@ import { toRaw } from "vue";
 
 export default {
   name: "CityList",
+  emits: ["removeCity"],
   components: { TodayForecast },
   props: {
     cityForecast: {
@@ -41,6 +43,9 @@ export default {
     setTodayForecast(forecast) {
       this.todayForecast = toRaw(forecast);
     },
+    removeCity(city) {
+      this.$emit('removeCity', city);
+    }
   },
 };
 </script>
