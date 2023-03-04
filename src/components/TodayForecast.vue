@@ -73,8 +73,7 @@
               <div class="col-6">
                 <div class="row">
                   <span
-                    >H: {{ this.maximumTemp }}&deg;
-                    &nbsp; L:
+                    >H: {{ this.maximumTemp }}&deg; &nbsp; L:
                     {{ this.minimumTemp }}&deg;</span
                   >
                 </div>
@@ -97,10 +96,15 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-4">
+                <div class="col-md-6">
                   <span>{{
                     this.forecastData.list[0].weather[0].description
                   }}</span>
+                </div>
+                <div class="col-md-6 mt-3 ml-3">
+                  <button v-if="this.forecastData.city.name !== 'Amsterdam'" class="btn btn-danger" @click="removeCityFromList(this.forecastData.city.name)">
+                    Remove
+                  </button>
                 </div>
               </div>
             </div>
@@ -116,6 +120,7 @@ import moment from "moment/moment";
 
 export default {
   name: "TodayForecast",
+  emits: ["removeCity"],
   props: {
     forecastData: {
       type: Object,
@@ -157,7 +162,6 @@ export default {
             humidity: item.main.humidity,
             windSpeed: item.wind.speed,
             description: item.weather[0].description,
-            icon: `http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`,
           };
         }
       });
@@ -165,11 +169,7 @@ export default {
       this.minimumTemp = minimumTemp;
       this.maximumTemp = maximumTemp;
       this.tomorrowForecast = tomorrowForecast;
-
-      return forecastData.list.filter((item) => item.dt_txt.includes(tomorrow));
     },
-
-    setMinAndMaxTemp() {},
     setTodayForecast(forecastData) {
       let today = moment();
       return (this.tomorrowForecast = forecastData.list.filter((item) => {
@@ -188,6 +188,9 @@ export default {
         return false;
       }));
     },
+    removeCityFromList(city){
+      this.$emit("removeCity", city);
+    }
   },
 };
 </script>
